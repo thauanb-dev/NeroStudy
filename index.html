@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nero Study</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M12 2l7 4v6c0 5-3 8-7 10-4-2-7-5-7-10V6l7-4z"></path>
+                    <path d="M9 12l2 2 4-4"></path>
+                </svg>
+            </div>
+            <div>
+                <h1>Nero Study</h1>
+                <p>Foco, rotina e aprovação</p>
+            </div>
+        </div>
+        <nav class="nav">
+            <button class="nav-button active" data-view="pomodoroView" data-title="Pomodoro" data-subtitle="Cronômetro limpo para sessões de foco.">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="13" r="8"></circle>
+                    <path d="M12 9v4l3 2"></path>
+                    <path d="M9 2h6"></path>
+                </svg>
+                Pomodoro
+            </button>
+            <button class="nav-button" data-view="studyView" data-title="Gestor de Estudo" data-subtitle="Registre o que foi estudado no dia.">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M4 4v15.5"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+                Gestor de Estudo
+            </button>
+            <button class="nav-button" data-view="planView" data-title="Planejamento Semanal" data-subtitle="Organize os assuntos que serão estudados na semana.">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M8 2v4"></path>
+                    <path d="M16 2v4"></path>
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <path d="M3 10h18"></path>
+                </svg>
+                Planejamento
+            </button>
+            <button class="nav-button" data-view="goalsView" data-title="Metas do Dia" data-subtitle="Checklist simples para fechar o dia com clareza.">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                Metas do Dia
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            <strong>Nero Study</strong><br>
+            Um painel limpo para estudar com constância, foco e controle.
+        </div>
+    </aside>
+    <main class="main">
+        <header class="header">
+            <div>
+                <h2 id="pageTitle">Pomodoro</h2>
+                <p id="pageSubtitle">Cronômetro limpo para sessões de foco.</p>
+            </div>
+            <div class="status-card">
+                <span>
+                    <svg class="icon small-icon" viewBox="0 0 24 24">
+                        <path d="M13 2L3 14h8l-1 8 11-14h-8l0-6z"></path>
+                    </svg>
+                    Foco registrado hoje
+                </span>
+                <strong id="todayFocus">0min</strong>
+            </div>
+        </header>
+        <section id="pomodoroView" class="view active">
+            <div class="grid">
+                <div class="card timer-card">
+                    <div class="mode-badge">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M13 2L3 14h8l-1 8 11-14h-8l0-6z"></path>
+                        </svg>
+                        Sessão ativa
+                    </div>
+                    <div id="timer" class="timer">25:00</div>
+                    <div id="timerStatus" class="timer-status">Pronto para iniciar</div>
+                    <div class="controls">
+                        <button class="btn primary" id="startBtn">
+                            <svg class="icon small-icon" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"></path>
+                            </svg>
+                        </button>
+                        <button class="btn" id="pauseBtn">
+                            <svg class="icon small-icon" viewBox="0 0 24 24">
+                                <path d="M10 4H6v16h4V4z"></path>
+                                <path d="M18 4h-4v16h4V4z"></path>
+                            </svg>
+                        </button>
+                        <button class="btn danger" id="resetBtn">
+                            <svg class="icon small-icon" viewBox="0 0 24 24">
+                                <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                                <path d="M3 3v6h6"></path>
+                            </svg>
+                        </button>
+                        <button class="btn" id="finishBtn">
+                            <svg class="icon small-icon" viewBox="0 0 24 24">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <path d="M17 21v-8H7v8"></path>
+                                <path d="M7 3v5h8"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="config-row config-input">
+                        <input type="number" 
+                        id="focusMinutes" 
+                        min="1" 
+                        max="999" value="25"
+                        autocomplete="on"
+                        >
+                        <button class="btn" id="applyMinutesBtn">
+                            <svg class="icon small-icon" viewBox="0 0 24 24">
+                                <path d="M20 6L9 17l-5-5"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M3 3v18h18"></path>
+                            <path d="M7 15l3-3 3 2 5-7"></path>
+                        </svg>
+                        Histórico de foco
+                    </h3>
+                    <div id="focusHistory" class="history-list"></div>
+                </div>
+            </div>
+        </section>
+        <section id="studyView" class="view">
+            <div class="study-overview">
+                <div class="stat">
+                    <span>
+                        <svg class="icon small-icon" viewBox="0 0 24 24">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M4 4v15.5"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        Matérias hoje
+                    </span>
+                    <strong id="subjectsCount">0</strong>
+                </div>
+                <div class="stat">
+                    <span>
+                        <svg class="icon small-icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="13" r="8"></circle>
+                            <path d="M12 9v4l3 2"></path>
+                        </svg>
+                        Tempo estudado
+                    </span>
+                    <strong id="studyMinutes">0min</strong>
+                </div>
+                <div class="stat">
+                    <span>
+                        <svg class="icon small-icon" viewBox="0 0 24 24">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        Questões feitas
+                    </span>
+                    <strong id="questionsCount">0</strong>
+                </div>
+                <div class="performance-card">
+                    <div class="performance-info">
+                        <div class="performance-card-header">
+                            <span>
+                                <svg class="icon small-icon" viewBox="0 0 24 24">
+                                    <path d="M3 3v18h18"></path>
+                                    <path d="M7 15l3-3 3 2 5-7"></path>
+                                </svg>
+                                <span id="performanceTitle">Desempenho do dia</span>
+                            </span>
+                            <select id="performanceScope" class="performance-scope">
+                                <option value="today">Dia</option>
+                                <option value="all">Geral</option>
+                            </select>
+                        </div>
+                        <strong id="performanceMain">0%</strong>
+                        <small id="performanceDetails">0 acertos • 0 erros</small>
+                    </div>
+                    <div class="performance-chart">
+                        <div id="performancePie" class="main-pie" style="--hit-percent:0%;"></div>
+                        <div class="performance-legend">
+                            <div class="legend-item">
+                                <span class="legend-dot hit"></span>
+                                <span id="hitLegend">0%</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot error"></span>
+                                <span id="errorLegend">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 5v14"></path>
+                            <path d="M5 12h14"></path>
+                        </svg>
+                        Registrar estudo
+                    </h3>
+                    <form id="studyForm" class="form-grid three">
+                        <input type="text" id="subjectInput" placeholder="Matéria" required>
+                        <input type="text" id="topicInput" placeholder="Assunto estudado" required>
+                        <input type="number" id="minutesInput" placeholder="Minutos" min="1" required>
+                        <select id="studyTypeInput">
+                            <option value="Teoria">Teoria</option>
+                            <option value="Questões">Questões</option>
+                            <option value="Revisão">Revisão</option>
+                            <option value="Simulado">Simulado</option>
+                            <option value="Videoaula">Videoaula</option>
+                            <option value="Leitura de lei seca">Lei seca</option>
+                        </select>
+                        <select id="difficultyInput">
+                            <option value="Leve">Leve</option>
+                            <option value="Médio">Médio</option>
+                            <option value="Pesado">Pesado</option>
+                            <option value="Travado">Travado</option>
+                        </select>
+                        <select id="statusInput">
+                            <option value="Concluído">Concluído</option>
+                            <option value="Revisar">Revisar</option>
+                            <option value="Pendente">Pendente</option>
+                        </select>
+                        <input type="number" id="questionsInput" placeholder="Questões" min="0">
+                        <input type="number" id="hitsInput" placeholder="Acertos" min="0">
+                        <input type="number" id="errorsInput" placeholder="Erros" min="0">
+                        <textarea id="notesInput" class="form-full" placeholder="Observações: pontos fracos, revisão futura, dificuldade, páginas, aula..."></textarea>
+                        <button class="btn primary form-full" type="submit">
+                            <svg class="icon small-icon" viewBox="0 0 24 24">
+                                <path d="M12 5v14"></path>
+                                <path d="M5 12h14"></path>
+                            </svg>
+                            Adicionar registro
+                        </button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        Estudos de hoje
+                    </h3>
+                    <div id="studyList" class="study-list"></div>
+                </div>
+            </div>
+        </section>
+        <section id="planView" class="view">
+            <div class="stats">
+                <div class="stat">
+                    <span>
+                        <svg class="icon small-icon" viewBox="0 0 24 24">
+                            <path d="M8 2v4"></path>
+                            <path d="M16 2v4"></path>
+                            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                            <path d="M3 10h18"></path>
+                        </svg>
+                        Planos da semana
+                    </span>
+                    <strong id="weekPlanCount">0</strong>
+                </div>
+                <div class="stat">
+                    <span>
+                        <svg class="icon small-icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <path d="M12 7v5l3 2"></path>
+                        </svg>
+                        Tempo previsto
+                    </span>
+                    <strong id="weekPlanMinutes">0min</strong>
+                </div>
+                <div class="stat">
+                    <span>
+                        <svg class="icon small-icon" viewBox="0 0 24 24">
+                            <path d="M12 2l3 7h7l-5.5 4.5L18.5 21 12 16.8 5.5 21l2-7.5L2 9h7l3-7z"></path>
+                        </svg>
+                        Alta prioridade
+                    </span>
+                    <strong id="highPriorityCount">0</strong>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 5v14"></path>
+                            <path d="M5 12h14"></path>
+                        </svg>
+                        Planejar assunto
+                    </h3>
+                    <form id="planForm" class="form-grid">
+                        <select id="planDayInput" required>
+                            <option value="Segunda">Segunda</option>
+                            <option value="Terça">Terça</option>
+                            <option value="Quarta">Quarta</option>
+                            <option value="Quinta">Quinta</option>
+                            <option value="Sexta">Sexta</option>
+                            <option value="Sábado">Sábado</option>
+                            <option value="Domingo">Domingo</option>
+                        </select>
+                        <input type="number" id="planMinutesInput" placeholder="Minutos" min="1" required>
+                        <input type="text" id="planSubjectInput" class="form-full" placeholder="Matéria" required>
+                        <input type="text" id="planTopicInput" class="form-full" placeholder="Assunto planejado" required>
+                        <select id="planPriorityInput">
+                            <option value="Alta">Alta prioridade</option>
+                            <option value="Média">Média prioridade</option>
+                            <option value="Baixa">Baixa prioridade</option>
+                        </select>
+                        <select id="planStatusInput">
+                            <option value="Planejado">Planejado</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                        <button class="btn primary form-full" type="submit">
+                            <svg class="icon small-icon" viewBox="0 0 24 24">
+                                <path d="M8 2v4"></path>
+                                <path d="M16 2v4"></path>
+                                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                                <path d="M3 10h18"></path>
+                            </svg>
+                            Adicionar ao planejamento
+                        </button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M8 2v4"></path>
+                            <path d="M16 2v4"></path>
+                            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                            <path d="M3 10h18"></path>
+                        </svg>
+                        Semana planejada
+                    </h3>
+                    <div id="planList" class="plan-list"></div>
+                </div>
+            </div>
+        </section>
+        <section id="goalsView" class="view">
+            <div class="stats">
+                <div class="stat">
+                    <span>
+                        <svg class="icon small-icon" viewBox="0 0 24 24">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        Metas do dia
+                    </span>
+                    <strong id="dailyGoalsCount">0</strong>
+                </div>
+                <div class="stat">
+                    <span>
+                        <svg class="icon small-icon" viewBox="0 0 24 24">
+                            <path d="M20 6L9 17l-5-5"></path>
+                        </svg>
+                        Concluídas
+                    </span>
+                    <strong id="dailyGoalsDone">0</strong>
+                </div>
+                <div class="stat">
+                    <span>
+                        <svg class="icon small-icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <path d="M12 8v5"></path>
+                            <path d="M12 17h.01"></path>
+                        </svg>
+                        Pendentes
+                    </span>
+                    <strong id="dailyGoalsPending">0</strong>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 5v14"></path>
+                            <path d="M5 12h14"></path>
+                        </svg>
+                        Nova meta
+                    </h3>
+                    <form id="goalForm" class="form-grid">
+                        <input type="text" id="goalTextInput" class="form-full" placeholder="Ex: Fazer 30 questões de Direito Administrativo" required>
+                        <select id="goalAreaInput">
+                            <option value="Estudo">Estudo</option>
+                            <option value="Revisão">Revisão</option>
+                            <option value="Questões">Questões</option>
+                            <option value="Simulado">Simulado</option>
+                            <option value="Leitura">Leitura</option>
+                            <option value="Organização">Organização</option>
+                        </select>
+                        <select id="goalPriorityInput">
+                            <option value="Alta">Alta prioridade</option>
+                            <option value="Média">Média prioridade</option>
+                            <option value="Baixa">Baixa prioridade</option>
+                        </select>
+                        <button class="btn primary form-full" type="submit">
+                            <svg class="icon small-icon" viewBox="0 0 24 24">
+                                <path d="M12 5v14"></path>
+                                <path d="M5 12h14"></path>
+                            </svg>
+                            Adicionar meta
+                        </button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        Checklist de hoje
+                    </h3>
+                    <div id="goalList" class="goal-list"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
