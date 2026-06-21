@@ -1,8 +1,8 @@
 {
   "name": "nerostudy",
   "version": "1.0.0",
-  "description": "O **neroStudy** é um projeto pessoal focado em organização de estudos, produtividade e acompanhamento de desempenho.",
-  "main": "index.js",
+  "private": true,
+  "description": "NeroStudy é um projeto pessoal focado em organização de estudos, produtividade e acompanhamento de desempenho.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,10 +12,14 @@
     "type": "git",
     "url": "git+https://github.com/thauanb-dev/NeroStudy.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "estudos",
+    "produtividade",
+    "pomodoro",
+    "nextjs"
+  ],
+  "author": "Thauan",
   "license": "ISC",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/thauanb-dev/NeroStudy/issues"
   },
