@@ -1,0 +1,28 @@
+{
+  "name": "nerostudy",
+  "version": "1.0.0",
+  "description": "O **neroStudy** é um projeto pessoal focado em organização de estudos, produtividade e acompanhamento de desempenho.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thauanb-dev/NeroStudy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/thauanb-dev/NeroStudy/issues"
+  },
+  "homepage": "https://github.com/thauanb-dev/NeroStudy#readme",
+  "dependencies": {
+    "next": "^16.2.9",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  }
+}
