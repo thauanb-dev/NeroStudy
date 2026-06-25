@@ -2,7 +2,7 @@
 
 O **neroStudy** é um projeto pessoal focado em organização de estudos, produtividade e acompanhamento de desempenho.
 
-A ideia do projeto é reunir ferramentas simples para ajudar na rotina de estudos, como controle de tempo, metas, tarefas e registro de progresso.
+A ideia do projeto é reunir ferramentas simples para ajudar na rotina de estudos, como controle de tempo, metas, tarefas e registro de progresso
 
 ## Funcionalidades
 
