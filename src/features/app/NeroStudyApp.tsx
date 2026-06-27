@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import Debug from "../../components/dev/Debug";
 
 type ViewKey = "pomodoro" | "studies" | "plan" | "goals";
 
@@ -438,7 +439,7 @@ function deletePlan(id: string) {
             </div>
           </section>
         )}
-
+{/* Gestor de Estudo */}
         {activeView === "studies" && (
           <section className="grid">
             <div className="card">
@@ -452,6 +453,7 @@ function deletePlan(id: string) {
                     setStudyForm({ ...studyForm, subject: event.target.value })
                   }
                 />
+                <pre>{JSON.stringify(studyForm, null,2)}</pre>
 
                 <input
                   placeholder="Assunto"
@@ -526,13 +528,15 @@ function deletePlan(id: string) {
             </div>
           </section>
         )}
-
+{/* Planejamento */}
 {activeView === "plan" && (
   <section className="grid">
     <div className="card">
       <h3 className="card-title">Novo planejamento</h3>
+      <Debug value={planForm}/>
       <form className="flex flex-col gap-4" onSubmit={addPlan}>
         <input
+          type="date"
           placeholder="Dia da semana"
           value={planForm.day}
           onChange={(event) =>

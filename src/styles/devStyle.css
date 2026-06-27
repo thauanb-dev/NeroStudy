@@ -1,0 +1,8 @@
+pre {
+        overflow: auto;
+        padding: 12;
+        border-radius: 8;
+        background: #111;
+        color: "#7cff7c";
+        font-size: 12
+}
