@@ -531,8 +531,7 @@ function deletePlan(id: string) {
   <section className="grid">
     <div className="card">
       <h3 className="card-title">Novo planejamento</h3>
-
-      <form className="form" onSubmit={addPlan}>
+      <form className="flex flex-col gap-4" onSubmit={addPlan}>
         <input
           placeholder="Dia da semana"
           value={planForm.day}
@@ -540,7 +539,6 @@ function deletePlan(id: string) {
             setPlanForm({ ...planForm, day: event.target.value })
           }
         />
-
         <input
           placeholder="Matéria"
           value={planForm.subject}
