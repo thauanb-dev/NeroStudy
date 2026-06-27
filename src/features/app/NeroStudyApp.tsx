@@ -1,10 +1,67 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+
+type ViewKey = "pomodoro" | "studies" | "plan" | "goals";
+
+type FocusItem = {
+  id: string;
+  date: string;
+  minutes: number;
+  createdAt: string;
+};
+
+type StudyItem = {
+  id: string;
+  date: string;
+  subject: string;
+  topic: string;
+  minutes: string;
+  questions: string;
+  hits: string;
+  errors: string;
+  createdAt: string;
+};
+
+type StudyForm = {
+  subject: string;
+  topic: string;
+  minutes: string;
+  questions: string;
+  hits: string;
+  errors: string;
+};
+
+type PlanItem = {
+  id: string;
+  day: string;
+  subject: string;
+  task: string;
+  done: boolean;
+  createdAt: string;
+};
+
+type PlanForm = {
+  day: string;
+  subject: string;
+  task: string;
+};
+
+type GoalItem = {
+  id: string;
+  text: string;
+  done: boolean;
+  date: string;
+};
+
+type ViewConfig = {
+  title: string;
+  subtitle: string;
+};
 
 const todayKey = new Date().toLocaleDateString("pt-BR");
 
-const views = {
+const views: Record<ViewKey,ViewConfig> = {
   pomodoro: {
     title: "Pomodoro",
     subtitle: "Cronômetro limpo para sessões de foco.",
@@ -23,21 +80,21 @@ const views = {
   },
 };
 
-function formatTime(totalSeconds) {
+function formatTime(totalSeconds: number): string {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
 
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-function loadStorage(key, fallback) {
+function loadStorage<T>(key: string, fallback:T):T {
   if (typeof window === "undefined") return fallback;
 
   const data = localStorage.getItem(key);
   return data ? JSON.parse(data) : fallback;
 }
 
-function saveStorage(key, value) {
+function saveStorage<T>(key: string, value: T): void {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
@@ -45,7 +102,7 @@ function saveStorage(key, value) {
 
 export default function NeroStudyApp() {
 
-function addPlan(event) {
+function addPlan(event: FormEvent<HTMLFormElement>) {
   event.preventDefault();
 
   if (!planForm.day.trim() || !planForm.subject.trim() || !planForm.task.trim()) {
@@ -76,7 +133,7 @@ function addPlan(event) {
   });
 }
 
-function togglePlan(id) {
+function togglePlan(id: string) {
   const updatedData = planData.map((item) =>
     item.id === id ? { ...item, done: !item.done } : item
   );
@@ -85,23 +142,23 @@ function togglePlan(id) {
   saveStorage("neroStudy_weekPlan", updatedData);
 }
 
-function deletePlan(id) {
+function deletePlan(id: string) {
   const updatedData = planData.filter((item) => item.id !== id);
 
   setPlanData(updatedData);
   saveStorage("neroStudy_weekPlan", updatedData);
 }
 
-  const [activeView, setActiveView] = useState("pomodoro");
-  const [focusData, setFocusData] = useState([]);
-  const [studyData, setStudyData] = useState([]);
-  const [planData, setPlanData] = useState([]);
-  const [goalData, setGoalData] = useState([]);
-  const [defaultMinutes, setDefaultMinutes] = useState(25);
-  const [secondsLeft, setSecondsLeft] = useState(25 * 60);
-  const [isRunning, setIsRunning] = useState(false);
+  const [activeView, setActiveView] = useState<ViewKey>("pomodoro");
+  const [focusData, setFocusData] = useState<FocusItem[]>([]);
+  const [studyData, setStudyData] = useState<StudyItem[]>([]);
+  const [planData, setPlanData] = useState<PlanItem[]>([]);
+  const [goalData, setGoalData] = useState<GoalItem[]>([]);
+  const [defaultMinutes, setDefaultMinutes] = useState<number>(30);
+  const [secondsLeft, setSecondsLeft] = useState<number>(defaultMinutes * 60);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
 
-  const [studyForm, setStudyForm] = useState({
+  const [studyForm, setStudyForm] = useState<StudyForm>({
     subject: "",
     topic: "",
     minutes: "",
@@ -110,19 +167,19 @@ function deletePlan(id) {
     errors: "",
 });
 
-  const [planForm, setPlanForm] = useState({
+  const [planForm, setPlanForm] = useState<PlanForm>({
     day: "",
     subject: "",
     task: "",  
   })
 
-  const [goalText, setGoalText] = useState("");
+  const [goalText, setGoalText] = useState<string>("");
 
   useEffect(() => {
-    setFocusData(loadStorage("neroStudy_focus", []));
-    setStudyData(loadStorage("neroStudy_studies", []));
-    setPlanData(loadStorage("neroStudy_weekPlan", []));
-    setGoalData(loadStorage("neroStudy_dailyGoals", []));
+    setFocusData(loadStorage<FocusItem[]>("neroStudy_focus", []));
+    setStudyData(loadStorage<StudyItem[]>("neroStudy_studies", []));
+    setPlanData(loadStorage<PlanItem[]>("neroStudy_weekPlan", []));
+    setGoalData(loadStorage<GoalItem[]>("neroStudy_dailyGoals", []));
   }, []);
 
   useEffect(() => {
@@ -203,7 +260,7 @@ function deletePlan(id) {
     resetTimer();
   }
 
-  function addStudy(event) {
+  function addStudy(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const questions = Number(studyForm.questions || 0);
@@ -241,7 +298,7 @@ function deletePlan(id) {
     });
   }
 
-  function addGoal(event) {
+  function addGoal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!goalText.trim()) return;
@@ -261,7 +318,7 @@ function deletePlan(id) {
     setGoalText("");
   }
 
-  function toggleGoal(id) {
+  function toggleGoal(id: string) {
     const updatedData = goalData.map((goal) =>
       goal.id === id ? { ...goal, done: !goal.done } : goal
     );
@@ -288,7 +345,7 @@ function deletePlan(id) {
               key={key}
               type="button"
               className={`nav-button ${activeView === key ? "active" : ""}`}
-              onClick={() => setActiveView(key)}
+              onClick={() => setActiveView(key as ViewKey)}
             >
               {view.title}
             </button>
@@ -350,7 +407,9 @@ function deletePlan(id) {
                   type="number"
                   value={defaultMinutes}
                   min="1"
-                  onChange={(event) => setDefaultMinutes(event.target.value)}
+                  onChange={(event) =>
+                    setDefaultMinutes(Number(event.target.value))
+                  }
                 />
 
                 <button className="btn small" type="button" onClick={applyMinutes}>
