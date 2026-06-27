@@ -41,14 +41,62 @@ function saveStorage(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-export default function NeroStudyApp() {
-  const [activeView, setActiveView] = useState("pomodoro");
 
+
+export default function NeroStudyApp() {
+
+function addPlan(event) {
+  event.preventDefault();
+
+  if (!planForm.day.trim() || !planForm.subject.trim() || !planForm.task.trim()) {
+    alert("Preencha dia, matéria e tarefa do planejamento.");
+    return;
+  }
+
+  const updatedData = [
+    {
+      id: crypto.randomUUID(),
+      ...planForm,
+      done: false,
+      createdAt: new Date().toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    },
+    ...planData,
+  ];
+
+  setPlanData(updatedData);
+  saveStorage("neroStudy_weekPlan", updatedData);
+
+  setPlanForm({
+    day: "",
+    subject: "",
+    task: "",
+  });
+}
+
+function togglePlan(id) {
+  const updatedData = planData.map((item) =>
+    item.id === id ? { ...item, done: !item.done } : item
+  );
+
+  setPlanData(updatedData);
+  saveStorage("neroStudy_weekPlan", updatedData);
+}
+
+function deletePlan(id) {
+  const updatedData = planData.filter((item) => item.id !== id);
+
+  setPlanData(updatedData);
+  saveStorage("neroStudy_weekPlan", updatedData);
+}
+
+  const [activeView, setActiveView] = useState("pomodoro");
   const [focusData, setFocusData] = useState([]);
   const [studyData, setStudyData] = useState([]);
   const [planData, setPlanData] = useState([]);
   const [goalData, setGoalData] = useState([]);
-
   const [defaultMinutes, setDefaultMinutes] = useState(25);
   const [secondsLeft, setSecondsLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
@@ -60,7 +108,13 @@ export default function NeroStudyApp() {
     questions: "",
     hits: "",
     errors: "",
-  });
+});
+
+  const [planForm, setPlanForm] = useState({
+    day: "",
+    subject: "",
+    task: "",  
+  })
 
   const [goalText, setGoalText] = useState("");
 
@@ -414,16 +468,72 @@ export default function NeroStudyApp() {
           </section>
         )}
 
-        {activeView === "plan" && (
-          <section className="grid">
-            <div className="card">
-              <h3 className="card-title">Planejamento</h3>
-              <div className="empty">
-                Planejamento entra na próxima rodada rápida.
-              </div>
+{activeView === "plan" && (
+  <section className="grid">
+    <div className="card">
+      <h3 className="card-title">Novo planejamento</h3>
+
+      <form className="form" onSubmit={addPlan}>
+        <input
+          placeholder="Dia da semana"
+          value={planForm.day}
+          onChange={(event) =>
+            setPlanForm({ ...planForm, day: event.target.value })
+          }
+        />
+
+        <input
+          placeholder="Matéria"
+          value={planForm.subject}
+          onChange={(event) =>
+            setPlanForm({ ...planForm, subject: event.target.value })
+          }
+        />
+
+        <input
+          placeholder="Tarefa / assunto"
+          value={planForm.task}
+          onChange={(event) =>
+            setPlanForm({ ...planForm, task: event.target.value })
+          }
+        />
+
+        <button className="btn primary" type="submit">
+          Adicionar planejamento
+        </button>
+      </form>
+    </div>
+
+    <div className="card">
+      <h3 className="card-title">Plano semanal</h3>
+
+      <div className="history-list">
+        {planData.length === 0 ? (
+          <div className="empty">Nenhum planejamento cadastrado.</div>
+        ) : (
+          planData.map((item) => (
+            <div className="history-item" key={item.id}>
+              <button type="button" onClick={() => togglePlan(item.id)}>
+                <strong>
+                  {item.done ? "✅" : "⬜"} {item.day} — {item.subject}
+                </strong>
+                <span>{item.task}</span>
+              </button>
+
+              <button
+                className="btn small"
+                type="button"
+                onClick={() => deletePlan(item.id)}
+              >
+                Remover
+              </button>
             </div>
-          </section>
+          ))
         )}
+      </div>
+    </div>
+  </section>
+)}
 
         {activeView === "goals" && (
           <section className="grid">
