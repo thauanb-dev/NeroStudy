@@ -15,20 +15,20 @@ type FocusItem = {
 type StudyItem = {
   id: string;
   date: string;
-  subject: string;
+  materia: string;
   topic: string;
   minutes: string;
-  questions: string;
+  questoes: string;
   hits: string;
   errors: string;
   createdAt: string;
 };
 
 type StudyForm = {
-  subject: string;
+  materia: string;
   topic: string;
   minutes: string;
-  questions: string;
+  questoes: string;
   hits: string;
   errors: string;
 };
@@ -36,7 +36,7 @@ type StudyForm = {
 type PlanItem = {
   id: string;
   day: string;
-  subject: string;
+  materia: string;
   task: string;
   done: boolean;
   createdAt: string;
@@ -44,7 +44,7 @@ type PlanItem = {
 
 type PlanForm = {
   day: string;
-  subject: string;
+  materia: string;
   task: string;
 };
 
@@ -84,8 +84,11 @@ const views: Record<ViewKey,ViewConfig> = {
 function formatTime(totalSeconds: number): string {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+function formatDate(date: string){
+  const [year, month, day] = date.split('-')
+  return `${day}/${month}/${year}`
 }
 
 function loadStorage<T>(key: string, fallback:T):T {
@@ -106,7 +109,7 @@ export default function NeroStudyApp() {
 function addPlan(event: FormEvent<HTMLFormElement>) {
   event.preventDefault();
 
-  if (!planForm.day.trim() || !planForm.subject.trim() || !planForm.task.trim()) {
+  if (!planForm.day.trim() || !planForm.materia.trim() || !planForm.task.trim()) {
     alert("Preencha dia, matéria e tarefa do planejamento.");
     return;
   }
@@ -129,7 +132,7 @@ function addPlan(event: FormEvent<HTMLFormElement>) {
 
   setPlanForm({
     day: "",
-    subject: "",
+    materia: "",
     task: "",
   });
 }
@@ -160,17 +163,17 @@ function deletePlan(id: string) {
   const [isRunning, setIsRunning] = useState<boolean>(false);
 
   const [studyForm, setStudyForm] = useState<StudyForm>({
-    subject: "",
+    materia: "",
     topic: "",
     minutes: "",
-    questions: "",
+    questoes: "",
     hits: "",
     errors: "",
 });
 
   const [planForm, setPlanForm] = useState<PlanForm>({
     day: "",
-    subject: "",
+    materia: "",
     task: "",  
   })
 
@@ -210,7 +213,7 @@ function deletePlan(id: string) {
   );
 
   const totalQuestions = todayStudies.reduce(
-    (total, item) => total + Number(item.questions || 0),
+    (total, item) => total + Number(item.questoes || 0),
     0
   );
 
@@ -264,11 +267,11 @@ function deletePlan(id: string) {
   function addStudy(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const questions = Number(studyForm.questions || 0);
+    const questoes = Number(studyForm.questoes || 0);
     const hits = Number(studyForm.hits || 0);
     const errors = Number(studyForm.errors || 0);
 
-    if (questions > 0 && hits + errors !== questions) {
+    if (questoes > 0 && hits + errors !== questoes) {
       alert("A soma de acertos e erros precisa ser igual ao total de questões.");
       return;
     }
@@ -290,10 +293,10 @@ function deletePlan(id: string) {
     saveStorage("neroStudy_studies", updatedData);
 
     setStudyForm({
-      subject: "",
+      materia: "",
       topic: "",
       minutes: "",
-      questions: "",
+      questoes: "",
       hits: "",
       errors: "",
     });
@@ -448,9 +451,9 @@ function deletePlan(id: string) {
               <form className="form" onSubmit={addStudy}>
                 <input
                   placeholder="Matéria"
-                  value={studyForm.subject}
+                  value={studyForm.materia}
                   onChange={(event) =>
-                    setStudyForm({ ...studyForm, subject: event.target.value })
+                    setStudyForm({ ...studyForm, materia: event.target.value })
                   }
                 />
                 <pre>{JSON.stringify(studyForm, null,2)}</pre>
@@ -475,9 +478,9 @@ function deletePlan(id: string) {
                 <input
                   type="number"
                   placeholder="Questões"
-                  value={studyForm.questions}
+                  value={studyForm.questoes}
                   onChange={(event) =>
-                    setStudyForm({ ...studyForm, questions: event.target.value })
+                    setStudyForm({ ...studyForm, questoes: event.target.value })
                   }
                 />
 
@@ -517,9 +520,9 @@ function deletePlan(id: string) {
                 ) : (
                   todayStudies.map((item) => (
                     <div className="history-item" key={item.id}>
-                      <strong>{item.subject} — {item.topic}</strong>
+                      <strong>{item.materia} — {item.topic}</strong>
                       <span>
-                        {item.minutes}min • {item.questions || 0} questões
+                        {item.minutes}min • {item.questoes || 0} questões
                       </span>
                     </div>
                   ))
@@ -539,15 +542,16 @@ function deletePlan(id: string) {
           type="date"
           placeholder="Dia da semana"
           value={planForm.day}
-          onChange={(event) =>
-            setPlanForm({ ...planForm, day: event.target.value })
+          onChange={
+            (event) => 
+            setPlanForm({ ...planForm, day: event.target.value }) 
           }
         />
         <input
           placeholder="Matéria"
-          value={planForm.subject}
+          value={planForm.materia}
           onChange={(event) =>
-            setPlanForm({ ...planForm, subject: event.target.value })
+            setPlanForm({ ...planForm, materia: event.target.value })
           }
         />
 
@@ -576,7 +580,7 @@ function deletePlan(id: string) {
             <div className="history-item" key={item.id}>
               <button type="button" onClick={() => togglePlan(item.id)}>
                 <strong>
-                  {item.done ? "✅" : "⬜"} {item.day} — {item.subject}
+                  {item.done ? "✅" : "⬜"} {item.day} — {item.materia}
                 </strong>
                 <span>{item.task}</span>
               </button>

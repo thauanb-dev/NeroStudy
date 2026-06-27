@@ -1,8 +1,15 @@
-pre {
+.debug-panel summary {
+        cursor: pointer;
+        font-size: 12px;
+}
+.debug-panel pre {
         overflow: auto;
-        padding: 12;
-        border-radius: 8;
-        background: #111;
-        color: "#7cff7c";
-        font-size: 12
+        padding: 12px;
+        margin: 12px !important;
+        border: 1px solid #00FFFF; /* 💡 Mudei para ciano para combinar com o brilho */
+        border-radius: 8px;
+        background: #111 !important;
+        color: #7cff7c; /* Verde estilo terminal retro */
+        box-shadow: inset 0 0 1px #00FFFF, inset 0 0 4px #04e808; /* Syntaxe corrigida */
+        font-size: 12px; 
 }
