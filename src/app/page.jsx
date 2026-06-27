@@ -1,7 +1,9 @@
+import NeroStudyApp from "../features/app/NeroStudyApp";
+
 export default function HomePage() {
   return (
     <main>
-      <h1>NeroStudy</h1>
+      <NeroStudyApp/>
       <p>Foco, rotina e aprovação.</p>
     </main>
   );

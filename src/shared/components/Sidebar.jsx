@@ -20,11 +20,11 @@ export default function Sidebar() {
         </button>
 
         <button className="nav-button" type="button">
-          Planejamento
+          Planejamento  
         </button>
 
         <button className="nav-button" type="button">
-          Metas do Dia
+          Metas do Dia 
         </button>
       </nav>
 
