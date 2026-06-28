@@ -1,7 +1,8 @@
 "use client";
-
+import "../../styles/NeroStudyStyle.css"
 import { useEffect, useState, type FormEvent } from "react";
 import Debug from "../../components/dev/Debug";
+import PlanerSemanal, { type PlanItem } from "../../components/PlanerSemanal";
 
 type ViewKey = "pomodoro" | "studies" | "plan" | "goals";
 
@@ -31,15 +32,6 @@ type StudyForm = {
   questoes: string;
   hits: string;
   errors: string;
-};
-
-type PlanItem = {
-  id: string;
-  day: string;
-  materia: string;
-  task: string;
-  done: boolean;
-  createdAt: string;
 };
 
 type PlanForm = {
@@ -86,11 +78,6 @@ function formatTime(totalSeconds: number): string {
   const seconds = totalSeconds % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
-function formatDate(date: string){
-  const [year, month, day] = date.split('-')
-  return `${day}/${month}/${year}`
-}
-
 function loadStorage<T>(key: string, fallback:T):T {
   if (typeof window === "undefined") return fallback;
 
@@ -108,24 +95,27 @@ export default function NeroStudyApp() {
 
 function addPlan(event: FormEvent<HTMLFormElement>) {
   event.preventDefault();
-
   if (!planForm.day.trim() || !planForm.materia.trim() || !planForm.task.trim()) {
     alert("Preencha dia, matéria e tarefa do planejamento.");
     return;
   }
 
-  const updatedData = [
-    {
-      id: crypto.randomUUID(),
-      ...planForm,
-      done: false,
-      createdAt: new Date().toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    },
-    ...planData,
-  ];
+  const updatedData: PlanItem[] = editingPlanId
+    ? planData.map((item) =>
+        item.id === editingPlanId ? { ...item, ...planForm } : item
+      )
+    : [
+        {
+          id: crypto.randomUUID(),
+          ...planForm,
+          done: false,
+          createdAt: new Date().toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+        ...planData,
+      ];
 
   setPlanData(updatedData);
   saveStorage("neroStudy_weekPlan", updatedData);
@@ -135,6 +125,8 @@ function addPlan(event: FormEvent<HTMLFormElement>) {
     materia: "",
     task: "",
   });
+
+  setEditingPlanId(null);
 }
 
 function togglePlan(id: string) {
@@ -148,11 +140,22 @@ function togglePlan(id: string) {
 
 function deletePlan(id: string) {
   const updatedData = planData.filter((item) => item.id !== id);
-
   setPlanData(updatedData);
   saveStorage("neroStudy_weekPlan", updatedData);
 }
 
+function editPlan(item: PlanItem) {
+  setEditingPlanId(item.id);
+
+  setPlanForm({
+    day: item.day,
+    materia: item.materia,
+    task: item.task,
+  });
+}
+
+// área dos declaracoes dos useState
+  const [editingPlanId, setEditingPlanId] = useState<string|null>(null)  
   const [activeView, setActiveView] = useState<ViewKey>("pomodoro");
   const [focusData, setFocusData] = useState<FocusItem[]>([]);
   const [studyData, setStudyData] = useState<StudyItem[]>([]);
@@ -424,7 +427,7 @@ function deletePlan(id: string) {
 
             <div className="card">
               <h3 className="card-title">Histórico de foco</h3>
-
+              
               <div className="history-list">
                 {focusData.filter((item) => item.date === todayKey).length === 0 ? (
                   <div className="empty">Nenhum foco registrado hoje.</div>
@@ -456,7 +459,6 @@ function deletePlan(id: string) {
                     setStudyForm({ ...studyForm, materia: event.target.value })
                   }
                 />
-                <pre>{JSON.stringify(studyForm, null,2)}</pre>
 
                 <input
                   placeholder="Assunto"
@@ -535,8 +537,10 @@ function deletePlan(id: string) {
 {activeView === "plan" && (
   <section className="grid">
     <div className="card">
-      <h3 className="card-title">Novo planejamento</h3>
-      <Debug value={planForm}/>
+    <h3 className="card-title">
+      {editingPlanId ? "Editar planejamento" : "Novo planejamento"}
+    </h3>      
+    <Debug value={planForm}/>
       <form className="flex flex-col gap-4" onSubmit={addPlan}>
         <input
           type="date"
@@ -563,44 +567,22 @@ function deletePlan(id: string) {
           }
         />
 
-        <button className="btn primary" type="submit">
-          Adicionar planejamento
-        </button>
+      <button className="btn primary" type="submit">
+        {editingPlanId ? "Salvar alterações" : "Adicionar planejamento"}
+      </button>
       </form>
     </div>
 
-    <div className="card">
-      <h3 className="card-title">Plano semanal</h3>
-
-      <div className="history-list">
-        {planData.length === 0 ? (
-          <div className="empty">Nenhum planejamento cadastrado.</div>
-        ) : (
-          planData.map((item) => (
-            <div className="history-item" key={item.id}>
-              <button type="button" onClick={() => togglePlan(item.id)}>
-                <strong>
-                  {item.done ? "✅" : "⬜"} {item.day} — {item.materia}
-                </strong>
-                <span>{item.task}</span>
-              </button>
-
-              <button
-                className="btn small"
-                type="button"
-                onClick={() => deletePlan(item.id)}
-              >
-                Remover
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
+    <PlanerSemanal
+      plans={planData}
+      onToggle={togglePlan}
+      onDelete={deletePlan}
+      onEdit={editPlan}
+    />
   </section>
 )}
 
-        {activeView === "goals" && (
+{activeView === "goals" && (
           <section className="grid">
             <div className="card">
               <h3 className="card-title">Nova meta</h3>

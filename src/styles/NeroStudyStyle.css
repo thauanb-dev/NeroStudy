@@ -1,0 +1,111 @@
+.history-list {
+  display: flex;
+  flex-direction: column;
+  margin:16px !important;
+  gap: 16px; /* Alinhado com o gap padrão de listas do seu globals */
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Estado Vazio */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+}
+
+/* O Card Principal */
+.history-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel-soft); /* Tom levemente mais claro que o fundo do painel */
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  transition: all 0.2s ease;
+}
+
+.history-card:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 18px rgba(0, 255, 209, 0.08);
+}
+
+/* Quando a tarefa estiver concluída */
+.history-card.is-done {
+  border-color: rgba(138, 255, 128, 0.35); /* var(--accent-2) com opacidade */
+  background: rgba(138, 255, 128, 0.025);
+}
+
+.history-card.is-done .card-title,
+.history-card.is-done .card-task {
+  text-decoration: line-through;
+  color: var(--muted-2); /* Cinza mais apagado para itens feitos */
+}
+
+/* Botão invisível que engloba o conteúdo */
+.card-main-action {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.status-indicator {
+  font-size: 1.2rem;
+  margin-top: 2px;
+}
+
+/* Organização dos textos */
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card-date {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent); /* Data ganha o brilho ciano/neon principal */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text); /* Branco puro */
+}
+
+.card-task {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted); /* Cinza médio de suporte */
+}
+
+/* Botão de Remover Moderno */
+.btn-delete {
+  background: rgba(255, 77, 109, 0.1); /* var(--danger) sutil */
+  color: #ffb1bf; /* Vermelho claro/rosa idêntico ao seu .btn.danger original */
+  border: 1px solid rgba(255, 77, 109, 0.25);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+  background: rgba(255, 77, 109, 0.2);
+  border-color: var(--danger);
+  box-shadow: 0 0 12px rgba(255, 77, 109, 0.15);
+}
