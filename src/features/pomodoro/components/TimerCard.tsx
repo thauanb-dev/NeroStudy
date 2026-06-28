@@ -34,13 +34,17 @@ export default function TimerCard({
       <p className="timer-status">
         {isRunning ? "Foco em andamento" : "Pronto para iniciar"}
       </p>
-      <div className="controls">
+      <div className="focus-label-field">
+        <label htmlFor="focus-label">No que você vai focar?</label>
         <input
+          id="focus-label"
           type="text"
           value={label}
           onChange={(event) => onLabelChange(event.target.value)}
           placeholder="Nome do seu foco"
         />
+      </div>
+      <div className="controls">
         <button className="btn primary" type="button" onClick={onStart}>
           Iniciar
         </button>
@@ -55,6 +59,7 @@ export default function TimerCard({
         </button>
       </div>
       <div className="config-row">
+        <span>Duração</span>
         <input
           type="number"
           value={minutes}

@@ -31,8 +31,13 @@ export default function Pomodoro() {
   const [sessionStartedAt, setSessionStartedAt] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isRunning || secondsLeft <= 0) {
-      if (secondsLeft <= 0) setIsRunning(false);
+    if (!isRunning) {
+      return;
+    }
+
+    if (secondsLeft <= 0) {
+      setIsRunning(false);
+      finishTimer();
       return;
     }
 
@@ -70,15 +75,18 @@ export default function Pomodoro() {
     }
 
     const endedAt = currentTime();
-    const updatedData = [{
-      id: crypto.randomUUID(),
-      date: todayKey(),
-      label: sessionLabel.trim() || "Sessão de foco",
-      minutes: elapsedMinutes,
-      startedAt: sessionStartedAt ?? endedAt,
-      endedAt,
-      createdAt: endedAt,
-    }, ...focusData];
+    const updatedData = [
+      {
+        id: crypto.randomUUID(),
+        date: todayKey(),
+        label: sessionLabel.trim() || "Sessão de foco",
+        minutes: elapsedMinutes,
+        startedAt: sessionStartedAt ?? endedAt,
+        endedAt,
+        createdAt: endedAt,
+      },
+      ...focusData,
+    ];
 
     setFocusData(updatedData);
     saveStorage("neroStudy_focus", updatedData);
@@ -86,11 +94,21 @@ export default function Pomodoro() {
     setSessionLabel("");
   }
 
+  function handleDeleteFocusItem(id: string) {
+    const updatedData = focusData.filter((item) => item.id !== id);
+    setFocusData(updatedData);
+    saveStorage("neroStudy_focus", updatedData);
+  }
+
   const todayItems = focusData.filter((item) => item.date === todayKey());
 
   return (
     <>
-      <PageHeader title="Pomodoro" subtitle="Cronômetro limpo para sessões de foco." todayFocus={todayFocus} />
+      <PageHeader
+        title="Pomodoro"
+        subtitle="Cronômetro limpo para sessões de foco."
+        todayFocus={todayFocus}
+      />
       <section className="grid">
         <TimerCard
           label={sessionLabel}
@@ -105,8 +123,11 @@ export default function Pomodoro() {
           onApply={applyMinutes}
           onLabelChange={setSessionLabel}
         />
-        <Debug label="todayitems" value={todayItems}/>
-        <FocusHistory items={todayItems} />
+        <Debug label="todayitems" value={todayItems} />
+        <FocusHistory
+          items={todayItems}
+          onDelete={handleDeleteFocusItem}
+        />
       </section>
     </>
   );
