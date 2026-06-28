@@ -1,15 +1,7 @@
-import { Pencil, Trash2Icon, TrashIcon } from "lucide-react";
+import { Pencil, TrashIcon } from "lucide-react";
+import type { PlanItem } from "../types";
 
-export type PlanItem = {
-  id: string;
-  day: string;
-  materia: string;
-  task: string;
-  done: boolean;
-  createdAt: string;
-};
-
-type PlanerSemanalProps = {
+type WeeklyPlanListProps = {
   plans: PlanItem[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
@@ -21,12 +13,12 @@ function formatDate(date: string): string {
   return `${day}/${month}/${year}`;
 }
 
-export default function PlanerSemanal({
+export default function WeeklyPlanList({
   plans,
   onToggle,
   onDelete,
   onEdit,
-}: PlanerSemanalProps) {
+}: WeeklyPlanListProps) {
   return (
     <div className="card">
       <h3 className="card-title">Plano semanal</h3>
@@ -68,7 +60,6 @@ export default function PlanerSemanal({
                   className="btn-delete"
                   type="button"
                   onClick={() => onDelete(item.id)}
-                  //TODO Colocar um icone de Delete
                   aria-label={`Remover ${item.materia}`}
                 >
                   <TrashIcon />
@@ -77,6 +68,7 @@ export default function PlanerSemanal({
                   className="btn small"
                   type="button"
                   onClick={() => onEdit(item)}
+                  aria-label={`Editar ${item.materia}`}
                 >
                   <Pencil />
                 </button>

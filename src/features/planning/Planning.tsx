@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import PlanerSemanal, { type PlanItem } from "../../components/PlanerSemanal";
 import PageHeader from "../../shared/components/PageHeader";
 import { useTodayFocus } from "../../shared/hooks/useTodayFocus";
 import { loadStorage, saveStorage } from "../../shared/lib/storage";
 import PlanningForm, { type PlanFormData } from "./components/PlanningForm";
+import WeeklyPlanList from "./components/WeeklyPlanList";
+import type { PlanItem } from "./types";
 
 const emptyForm: PlanFormData = { day: "", materia: "", task: "" };
 
@@ -48,7 +49,7 @@ export default function Planning() {
       <PageHeader title="Planejamento" subtitle="Organize os assuntos da semana." todayFocus={todayFocus} />
       <section className="grid">
         <PlanningForm value={form} isEditing={Boolean(editingId)} onChange={setForm} onSubmit={submitPlan} />
-        <PlanerSemanal
+        <WeeklyPlanList
           plans={plans}
           onToggle={(id) => updatePlans(plans.map((item) => item.id === id ? { ...item, done: !item.done } : item))}
           onDelete={(id) => updatePlans(plans.filter((item) => item.id !== id))}

@@ -10,8 +10,12 @@ export default function FocusHistory({ items }: { items: FocusItem[] }) {
         ) : (
           items.map((item) => (
             <div className="history-item" key={item.id}>
-              <strong>Foco registrado</strong>
-              <span>{item.minutes}min • {item.createdAt}</span>
+              <strong>{item.label || "Sessão de foco"}</strong>
+              <span>
+                {item.minutes}min • {item.startedAt && item.endedAt
+                  ? `${item.startedAt} até ${item.endedAt}`
+                  : `concluído às ${item.createdAt}`}
+              </span>
             </div>
           ))
         )}

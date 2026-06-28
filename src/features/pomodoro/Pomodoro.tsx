@@ -6,6 +6,7 @@ import { useTodayFocus } from "../../shared/hooks/useTodayFocus";
 import { saveStorage, todayKey } from "../../shared/lib/storage";
 import FocusHistory from "./components/FocusHistory";
 import TimerCard from "./components/TimerCard";
+import Debug from "../../components/dev/Debug";
 
 function formatTime(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
@@ -13,11 +14,21 @@ function formatTime(totalSeconds: number) {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
+function currentTime() {
+  return new Date().toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export default function Pomodoro() {
+  // estado para o label
+  const [sessionLabel, setSessionLabel] = useState("");
   const { focusData, setFocusData, todayFocus } = useTodayFocus();
   const [defaultMinutes, setDefaultMinutes] = useState(30);
   const [secondsLeft, setSecondsLeft] = useState(defaultMinutes * 60);
   const [isRunning, setIsRunning] = useState(false);
+  const [sessionStartedAt, setSessionStartedAt] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isRunning || secondsLeft <= 0) {
@@ -35,6 +46,12 @@ export default function Pomodoro() {
   function resetTimer() {
     setIsRunning(false);
     setSecondsLeft(defaultMinutes * 60);
+    setSessionStartedAt(null);
+  }
+
+  function startTimer() {
+    setSessionStartedAt((startedAt) => startedAt ?? currentTime());
+    setIsRunning(true);
   }
 
   function applyMinutes() {
@@ -42,6 +59,7 @@ export default function Pomodoro() {
     setDefaultMinutes(safeMinutes);
     setSecondsLeft(safeMinutes * 60);
     setIsRunning(false);
+    setSessionStartedAt(null);
   }
 
   function finishTimer() {
@@ -51,16 +69,21 @@ export default function Pomodoro() {
       return;
     }
 
+    const endedAt = currentTime();
     const updatedData = [{
       id: crypto.randomUUID(),
       date: todayKey(),
+      label: sessionLabel.trim() || "Sessão de foco",
       minutes: elapsedMinutes,
-      createdAt: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+      startedAt: sessionStartedAt ?? endedAt,
+      endedAt,
+      createdAt: endedAt,
     }, ...focusData];
 
     setFocusData(updatedData);
     saveStorage("neroStudy_focus", updatedData);
     resetTimer();
+    setSessionLabel("");
   }
 
   const todayItems = focusData.filter((item) => item.date === todayKey());
@@ -70,16 +93,19 @@ export default function Pomodoro() {
       <PageHeader title="Pomodoro" subtitle="Cronômetro limpo para sessões de foco." todayFocus={todayFocus} />
       <section className="grid">
         <TimerCard
+          label={sessionLabel}
           time={formatTime(secondsLeft)}
           isRunning={isRunning}
           minutes={defaultMinutes}
           onMinutesChange={setDefaultMinutes}
-          onStart={() => setIsRunning(true)}
+          onStart={startTimer}
           onPause={() => setIsRunning(false)}
           onReset={resetTimer}
           onFinish={finishTimer}
           onApply={applyMinutes}
+          onLabelChange={setSessionLabel}
         />
+        <Debug label="todayitems" value={todayItems}/>
         <FocusHistory items={todayItems} />
       </section>
     </>

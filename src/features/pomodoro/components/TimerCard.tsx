@@ -1,5 +1,6 @@
 type TimerCardProps = {
   time: string;
+  label: string;
   isRunning: boolean;
   minutes: number;
   onMinutesChange: (minutes: number) => void;
@@ -8,9 +9,11 @@ type TimerCardProps = {
   onReset: () => void;
   onFinish: () => void;
   onApply: () => void;
+  onLabelChange: (label: string) => void;
 };
 
 export default function TimerCard({
+  label,
   time,
   isRunning,
   minutes,
@@ -20,6 +23,7 @@ export default function TimerCard({
   onReset,
   onFinish,
   onApply,
+  onLabelChange,
 }: TimerCardProps) {
   return (
     <div className="card timer-card">
@@ -31,10 +35,24 @@ export default function TimerCard({
         {isRunning ? "Foco em andamento" : "Pronto para iniciar"}
       </p>
       <div className="controls">
-        <button className="btn primary" type="button" onClick={onStart}>Iniciar</button>
-        <button className="btn" type="button" onClick={onPause}>Pausar</button>
-        <button className="btn" type="button" onClick={onReset}>Resetar</button>
-        <button className="btn" type="button" onClick={onFinish}>Finalizar</button>
+        <input
+          type="text"
+          value={label}
+          onChange={(event) => onLabelChange(event.target.value)}
+          placeholder="Nome do seu foco"
+        />
+        <button className="btn primary" type="button" onClick={onStart}>
+          Iniciar
+        </button>
+        <button className="btn" type="button" onClick={onPause}>
+          Pausar
+        </button>
+        <button className="btn" type="button" onClick={onReset}>
+          Resetar
+        </button>
+        <button className="btn" type="button" onClick={onFinish}>
+          Finalizar
+        </button>
       </div>
       <div className="config-row">
         <input
@@ -44,7 +62,9 @@ export default function TimerCard({
           aria-label="Duração da sessão em minutos"
           onChange={(event) => onMinutesChange(Number(event.target.value))}
         />
-        <button className="btn small" type="button" onClick={onApply}>Aplicar</button>
+        <button className="btn small" type="button" onClick={onApply}>
+          Aplicar
+        </button>
       </div>
     </div>
   );
