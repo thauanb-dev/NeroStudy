@@ -1,4 +1,18 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const navigation = [
+  { href: "/pomodoro", label: "Pomodoro" },
+  { href: "/gestor-estudos", label: "Gestor de Estudo" },
+  { href: "/planejamento", label: "Planejamento" },
+  { href: "/metas", label: "Metas do Dia" },
+];
+
 export default function Sidebar() {
+  const pathname = usePathname();
+
   return (
     <aside className="sidebar">
       <div className="brand">
@@ -11,21 +25,15 @@ export default function Sidebar() {
       </div>
 
       <nav className="nav">
-        <button className="nav-button active" type="button">
-          Pomodoro
-        </button>
-
-        <button className="nav-button" type="button">
-          Gestor de Estudo
-        </button>
-
-        <button className="nav-button" type="button">
-          Planejamento  
-        </button>
-
-        <button className="nav-button" type="button">
-          Metas do Dia 
-        </button>
+        {navigation.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`nav-button ${pathname === item.href ? "active" : ""}`}
+          >
+            {item.label}
+          </Link>
+        ))}
       </nav>
 
       <div className="sidebar-footer">

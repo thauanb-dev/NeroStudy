@@ -1,9 +1,5 @@
-import NeroStudyApp from "../features/app/NeroStudyApp";
+import { redirect } from "next/navigation";
 
 export default function HomePage() {
-  return (
-    <main>
-      <NeroStudyApp/>
-    </main>
-  );
+  redirect("/pomodoro");
 }
