@@ -1,4 +1,7 @@
-import { Pencil, TrashIcon } from "lucide-react";
+import { CalendarCheck2, CheckCircle2, Circle, Pencil, TrashIcon } from "lucide-react";
+import Card from "../../../shared/components/ui/Card";
+import EmptyState from "../../../shared/components/ui/EmptyState";
+import SectionTitle from "../../../shared/components/ui/SectionTitle";
 import type { PlanItem } from "../types";
 
 type WeeklyPlanListProps = {
@@ -20,63 +23,64 @@ export default function WeeklyPlanList({
   onEdit,
 }: WeeklyPlanListProps) {
   return (
-    <div className="card">
-      <h3 className="card-title">Plano semanal</h3>
+    <Card className="feature-panel">
+      <SectionTitle
+        eyebrow="Semana"
+        title="Plano semanal"
+        icon={<CalendarCheck2 size={18} aria-hidden="true" />}
+      />
 
-      <div className="history-list">
+      <div className="feature-list">
         {plans.length === 0 ? (
-          <div className="empty-state">
-            <span aria-hidden="true">📭</span>
-            <p>Nenhum planejamento cadastrado.</p>
-          </div>
+          <EmptyState message="Nenhum planejamento cadastrado." />
         ) : (
           plans.map((item) => (
             <div
-              className={`history-card ${item.done ? "is-done" : ""}`}
+              className={`feature-list-item planning-item ${item.done ? "is-done" : ""}`}
               key={item.id}
             >
               <button
                 type="button"
-                className="card-main-action"
+                className="feature-main-action"
                 onClick={() => onToggle(item.id)}
                 aria-label={`Marcar ${item.materia}: ${item.task} como ${
                   item.done ? "pendente" : "concluída"
                 }`}
                 aria-pressed={item.done}
               >
-                <span className="status-indicator" aria-hidden="true">
-                  {item.done ? "✅" : "⬜"}
+                <span className="feature-list-icon" aria-hidden="true">
+                  {item.done ? <CheckCircle2 size={17} /> : <Circle size={17} />}
                 </span>
 
-                <span className="card-info">
-                  <span className="card-date">{formatDate(item.day)}</span>
-                  <strong className="card-title">{item.materia}</strong>
-                  <span className="card-task">{item.task}</span>
+                <span className="feature-list-content">
+                  <small>{formatDate(item.day)}</small>
+                  <strong>{item.materia}</strong>
+                  <span>{item.task}</span>
                 </span>
               </button>
 
-              <div className="card-actions flex gap-4">
+              <div className="feature-actions">
                 <button
-                  className="btn-delete"
+                  className="feature-icon-button danger"
                   type="button"
                   onClick={() => onDelete(item.id)}
                   aria-label={`Remover ${item.materia}`}
                 >
-                  <TrashIcon />
+                  <TrashIcon size={16} aria-hidden="true" />
                 </button>
                 <button
-                  className="btn small"
+                  className="feature-icon-button"
                   type="button"
                   onClick={() => onEdit(item)}
                   aria-label={`Editar ${item.materia}`}
                 >
-                  <Pencil />
+                  <Pencil size={16} aria-hidden="true" />
                 </button>
               </div>
             </div>
           ))
         )}
       </div>
-    </div>
+    </Card>
   );
 }

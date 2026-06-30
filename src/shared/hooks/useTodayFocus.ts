@@ -16,7 +16,27 @@ export type FocusItem = {
 export function useTodayFocus() {
   const [focusData, setFocusData] = useState<FocusItem[]>([]);
   useEffect(() => {
-    setFocusData(loadStorage<FocusItem[]>("neroStudy_focus", []));
+    function syncFocusData() {
+      setFocusData(loadStorage<FocusItem[]>("neroStudy_focus", []));
+    }
+
+    function handleStorage(event: StorageEvent) {
+      if (event.key === "neroStudy_focus") syncFocusData();
+    }
+
+    function handleCustomStorage(event: Event) {
+      const customEvent = event as CustomEvent<{ key: string }>;
+      if (customEvent.detail?.key === "neroStudy_focus") syncFocusData();
+    }
+
+    syncFocusData();
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("neroStudy:storage", handleCustomStorage);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("neroStudy:storage", handleCustomStorage);
+    };
   }, []);
 
   const todayFocus = focusData

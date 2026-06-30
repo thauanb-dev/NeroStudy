@@ -13,6 +13,7 @@ export function loadStorage<T>(key: string, fallback: T): T {
 
 export function saveStorage<T>(key: string, value: T): void {
   localStorage.setItem(key, JSON.stringify(value));
+  window.dispatchEvent(new CustomEvent("neroStudy:storage", { detail: { key } }));
 }
 
 export const todayKey = () => new Date().toLocaleDateString("pt-BR");

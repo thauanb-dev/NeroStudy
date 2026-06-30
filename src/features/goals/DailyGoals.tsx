@@ -11,6 +11,7 @@ export default function DailyGoals() {
   const { todayFocus } = useTodayFocus();
   const [goals, setGoals] = useState<GoalItem[]>([]);
   const [goalText, setGoalText] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => setGoals(loadStorage("neroStudy_dailyGoals", [])), []);
 
@@ -19,10 +20,34 @@ export default function DailyGoals() {
     saveStorage("neroStudy_dailyGoals", updatedGoals);
   }
 
-  function addGoal(event: FormEvent<HTMLFormElement>) {
+  function submitGoal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!goalText.trim()) return;
-    updateGoals([{ id: crypto.randomUUID(), text: goalText.trim(), done: false, date: todayKey() }, ...goals]);
+
+    const updatedGoals = editingId
+      ? goals.map((goal) => goal.id === editingId ? { ...goal, text: goalText.trim() } : goal)
+      : [{ id: crypto.randomUUID(), text: goalText.trim(), done: false, date: todayKey() }, ...goals];
+
+    updateGoals(updatedGoals);
+    setGoalText("");
+    setEditingId(null);
+  }
+
+  function deleteGoal(id: string) {
+    updateGoals(goals.filter((item) => item.id !== id));
+    if (editingId === id) {
+      setGoalText("");
+      setEditingId(null);
+    }
+  }
+
+  function editGoal(goal: GoalItem) {
+    setEditingId(goal.id);
+    setGoalText(goal.text);
+  }
+
+  function cancelGoalEdit() {
+    setEditingId(null);
     setGoalText("");
   }
 
@@ -32,8 +57,19 @@ export default function DailyGoals() {
     <>
       <PageHeader title="Metas do Dia" subtitle="Defina pequenas metas para manter constância." todayFocus={todayFocus} />
       <section className="grid">
-        <GoalForm value={goalText} onChange={setGoalText} onSubmit={addGoal} />
-        <GoalList goals={todayGoals} onToggle={(id) => updateGoals(goals.map((item) => item.id === id ? { ...item, done: !item.done } : item))} />
+        <GoalForm
+          value={goalText}
+          isEditing={Boolean(editingId)}
+          onCancelEdit={cancelGoalEdit}
+          onChange={setGoalText}
+          onSubmit={submitGoal}
+        />
+        <GoalList
+          goals={todayGoals}
+          onToggle={(id) => updateGoals(goals.map((item) => item.id === id ? { ...item, done: !item.done } : item))}
+          onEdit={editGoal}
+          onDelete={deleteGoal}
+        />
       </section>
     </>
   );
