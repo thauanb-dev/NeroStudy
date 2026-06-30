@@ -5,8 +5,8 @@ import PageHeader from "../../shared/components/PageHeader";
 import { useTodayFocus } from "../../shared/hooks/useTodayFocus";
 import { saveStorage, todayKey } from "../../shared/lib/storage";
 import FocusHistory from "./components/FocusHistory";
+import ManualFocusForm from "./components/ManualFocusForm";
 import TimerCard from "./components/TimerCard";
-import Debug from "../../components/dev/Debug";
 
 function formatTime(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
@@ -100,6 +100,23 @@ export default function Pomodoro() {
     saveStorage("neroStudy_focus", updatedData);
   }
 
+  function handleAddFocusItem(data: { label: string; minutes: number }) {
+    const createdAt = currentTime();
+    const updatedData = [
+      {
+        id: crypto.randomUUID(),
+        date: todayKey(),
+        label: data.label,
+        minutes: data.minutes,
+        createdAt,
+      },
+      ...focusData,
+    ];
+
+    setFocusData(updatedData);
+    saveStorage("neroStudy_focus", updatedData);
+  }
+
   const todayItems = focusData.filter((item) => item.date === todayKey());
 
   return (
@@ -123,11 +140,13 @@ export default function Pomodoro() {
           onApply={applyMinutes}
           onLabelChange={setSessionLabel}
         />
-        <Debug label="todayitems" value={todayItems} />
-        <FocusHistory
-          items={todayItems}
-          onDelete={handleDeleteFocusItem}
-        />
+        <div className="focus-side-panel">
+          <ManualFocusForm onAdd={handleAddFocusItem} />
+          <FocusHistory
+            items={todayItems}
+            onDelete={handleDeleteFocusItem}
+          />
+        </div>
       </section>
     </>
   );
